@@ -139,7 +139,7 @@ def display_ingredient_status():
     FROM ingredients i
     JOIN latest_prices lp ON i.id = lp.ingredient_id
     JOIN prices p ON p.ingredient_id = i.id AND p.date = lp.latest_date
-    WHERE lp.latest_date < unixepoch() - 7776000
+    WHERE lp.latest_date < strftime('%s', 'now', '-90 days')
     ORDER BY p.date ASC;
     """
 
@@ -157,7 +157,7 @@ def display_ingredient_status():
         FROM prices
         GROUP BY ingredient_id
     )
-    AND p.date >= unixepoch() - 7776000
+    AND p.date >= strftime('%s', 'now', '-90 days')
     ORDER BY i.name;
     """
 
