@@ -1,4 +1,4 @@
 streamlit
-sqlalchemy
+sqlalchemy=2.0.38
 pandas
 boto3
