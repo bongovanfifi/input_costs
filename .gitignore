@@ -2,3 +2,9 @@
 db.db
 db.db-journal
 db.sqbpro
+ingredients.sql
+__pycache__/
+.venv/
+.streamlit/config.db
+.streamlit/data.db
+ingredients.json
