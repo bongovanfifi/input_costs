@@ -226,9 +226,8 @@ st.dataframe(ingredients)
 
 
 st.subheader("Database Backup")
-if st.button("Backup Prices"):
+if st.button("Backup"):
     try:
-        # Get prices data
         prices_data = conn.query(
             """
             SELECT 
@@ -244,24 +243,27 @@ if st.button("Backup Prices"):
             ORDER BY p.date DESC
         """
         )
-
         parquet_buffer = io.BytesIO()
         prices_data.to_parquet(parquet_buffer)
         parquet_buffer.seek(0)
-        backup_filename = (
+        backup_filename_parquet = (
             f"prices_backup_{dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.parquet"
         )
-        s3_path = f"item-costs/backups/{backup_filename}"
-
+        s3_path_parquet = f"item-costs/backups/{backup_filename_parquet}"
         s3 = boto3.client(
             "s3",
             aws_access_key_id=st.secrets.aws.access_key_id,
             aws_secret_access_key=st.secrets.aws.secret_access_key,
         )
-        s3.upload_fileobj(parquet_buffer, st.secrets.aws.bucket_name, s3_path)
-
-        log_action(conn, "backup", f"Prices backed up to S3 as {s3_path}")
-        st.success(f"Prices backed up successfully as {backup_filename}")
+        s3.upload_fileobj(parquet_buffer, st.secrets.aws.bucket_name, s3_path_parquet)
+        log_action(conn, "backup", f"Prices backed up to S3 as {s3_path_parquet}")
+        st.success(f"Prices backed up successfully as {backup_filename_parquet}")
+        backup_filename = f"db_backup_{dt.datetime.now().strftime('%Y%m%d_%H%M%S')}.db"
+        s3_path = f"item-costs/backups/{backup_filename}"
+        with open(".streamlit/db.db", "rb") as db_file:
+            s3.upload_fileobj(db_file, st.secrets.aws.bucket_name, s3_path)
+        log_action(conn, "backup", f"Database backed up to S3 as {s3_path}")
+        st.success(f"Database backed up successfully as {backup_filename}")
     except Exception as e:
         st.error(f"Backup failed: {str(e)}")
 
