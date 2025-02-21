@@ -2,7 +2,7 @@ This was made for a small business that wanted to pay nothing for the infrastruc
 
 **The security features are garbage. Don't rely on them!** I tried to go at least a little further than the basic approach shown [here](https://docs.streamlit.io/knowledge-base/deploy/authentication-without-sso) to make the password harder to brute force, but you could just [use a managed service](https://docs.streamlit.io/develop/concepts/connections/authentication) or you could [use streamlit-authenticator](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/), which seems pretty cool.
 
-**Streamlit will dumb the sqlite db on every reboot!** If you really wanted to, you could just manually stick the backed up db back into the environment with the code editor, but that's a very janky way to get persistence.
+**Streamlit will dump the sqlite db on every reboot!** If you really wanted to, you could just manually stick the backed up db back into the environment with the code editor, but that's a very janky way to get persistence.
 
 
 Your secrets.toml should look like this:
